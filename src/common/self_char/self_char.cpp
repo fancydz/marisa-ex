@@ -27,6 +27,10 @@ self_char::self_char()
 	lh_status=0;//0 for high speed,LH_TRANSITION_TIME for low speed
 	aura1_img=res->img["self_aura1"];
 	aura2_img=res->img["self_aura2"];
+	graze_freq=0;
+	inv_sts=0;
+	dying_sts=0;
+	card_get=false;
 }
 
 self_char::~self_char()
@@ -94,9 +98,23 @@ void self_char::act()
 	}
 	//
 	//bomb
-	if(estg->control.bomb&&(!no_bomb))
+	if(estg->control.bomb&&estg->data.spell>0)
 	{
-		bomb();
+		if(dying_sts!=0)
+		{
+			card_get=false;
+			bomb();
+			dying_sts=0;
+			estg->data.spell-=2;
+			if(estg->data.spell<0)
+				estg->data.spell=0;
+		}
+		else if(inv_sts==0)
+		{
+			card_get=false;
+			bomb();
+			estg->data.spell--;
+		}
 	}
 	//
 	//find target for bullets to aim
@@ -107,6 +125,23 @@ void self_char::act()
 	if(sts>+100.0) sts=+100.0;
 	//inv
 	if(inv_sts>0) inv_sts--;
+	//
+	//dying
+	if(dying_sts>0) dying_sts--;
+	if(dying_sts==1)
+	{
+		estg->data.player--;
+		estg->data.spell=3;
+		estg->add(new miss_protector());
+	}
+	//
+	//graze graphic
+	res->graze->ps->MoveTo(x2scr(real_x),y2scr(real_y),true);
+	res->graze->ps->info.nEmission=(int)graze_freq;
+	graze_freq=int(graze_freq*0.8);
+	res->graze->ps->Update(0.0166667);
+	res->graze->ps->Fire();
+	//
 }
 
 void self_char::miss()
@@ -115,12 +150,30 @@ void self_char::miss()
 	estg->add(new bubble(real_x,real_y,res->img["orange_bubble"],16,0.0,6.0,0xFFFFFFFF,0x00FFFFFF));
 	estg->add(new ge_ps(res->SPARK2[13],real_x,real_y,ENEMY_LAYER-1));
 	estg->play_se("se_pldead00",0.3);
-	//estg->kill_all_bullet();
-	inv();
+	inv(60);
+	dying_sts=30;
+	card_get=false;
+}
+
+void self_char::graze()
+{
+	estg->data.graze++;
+	estg->data.score+=GRAZE_BONUS;
+	if(!estg->self->slow)
+	{
+		estg->data.graze++;
+		estg->data.score+=GRAZE_BONUS;
+	}
+	graze_freq=130.0;
+	estg->play_se("se_graze",0.5);
 }
 
 void self_char::draw()
 {
+	//draw graze
+	res->graze->ps->Render();
+	//
+	//draw char
 	int i;
 	if(slow) i=1;
 	else i=0;
@@ -215,4 +268,22 @@ void self_char::find_tar()
 void self_char::inv(int t)
 {
 	inv_sts=t;
+}
+
+miss_protector::miss_protector()
+{
+	clear_r=0;
+	estg->self->inv(120);
+}
+
+void miss_protector::loop()
+{
+	int i;
+	list<bullet*>::iterator iter;
+	clear_r+=0.009;
+	for(i=0;i<MAX_LAYER;i++)
+		for(iter=estg->blist[ENEMY_BULLET][i].begin();iter!=estg->blist[ENEMY_BULLET][i].end();iter++)
+			if((*iter)->age>0&&(*iter)->suffer&&is_collide(*iter,estg->self,clear_r))
+				(*iter)->kill();
+	if(age==180) destroy();
 }

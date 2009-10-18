@@ -52,10 +52,9 @@ bool RenderFunc()
 	res->img["ui_bg_2"]->RenderStretch(392,0,640,480);
 	res->img["ui_bg_3"]->RenderStretch(8,0,392,8);
 	res->img["ui_bg_4"]->RenderStretch(8,472,392,480);
-	//bg
+	//
 	hge->Gfx_SetClipping(8,8,384,464);
-	//if(estg->bg1!=0&&(estg->bg_trans_status!=0||estg->bg2==0)) estg->bg1->draw(1.0);
-	//if(estg->bg2!=0) estg->bg2->draw(1.0-double(estg->bg_trans_status)/estg->bg_trans_time);
+	//bg
 	if(estg->bg1!=0&&estg->bg2==0)
 		estg->bg1->draw(1.0);
 	if(estg->bg1!=0&&estg->bg2!=0)
@@ -77,8 +76,26 @@ bool RenderFunc()
 			for(iter=estg->blist[i][j].begin();iter!=estg->blist[i][j].end();iter++)
 				(*iter)->draw();
 	//
-	//UI
+	hge->Gfx_SetClipping();
 	//
+	//UI
+	res->fnt->SetColor(0xFF000000);
+	res->fnt->printf(432,37,HGETEXT_LEFT,"Score: %d\n\nPlayer: %d\nSpell: %d\n\nPoint: %d\nGraze: %d\n\nObjs: %d/%d\nFPS: %d",
+		estg->data.score_show,estg->data.player,estg->data.spell,estg->data.point,estg->data.graze,estg->data.object_alive,estg->data.object,hge->Timer_GetFPS());
+	res->fnt->SetColor(0xFFFFFFFF);
+	res->fnt->printf(430,35,HGETEXT_LEFT,"Score: %d\n\nPlayer: %d\nSpell: %d\n\nPoint: %d\nGraze: %d\n\nObjs: %d/%d\nFPS: %d",
+		estg->data.score_show,estg->data.player,estg->data.spell,estg->data.point,estg->data.graze,estg->data.object_alive,estg->data.object,hge->Timer_GetFPS());
+	//
+	if(estg->count_down_timer>0)
+	{
+		res->fnt->SetColor(0xFF000000);
+		res->fnt->printf(389,12,HGETEXT_RIGHT,"%.0f",estg->count_down_timer);
+		res->fnt->SetColor(0xFFFFFFFF);
+		res->fnt->printf(387,10,HGETEXT_RIGHT,"%.0f",estg->count_down_timer);
+	}
+	//
+	if(estg->hp_bar>0)
+		res->img["hp_bar"]->RenderEx(16,16,0,estg->hp_bar*1.3,0.5);
 	hge->Gfx_EndScene();
 	return false;
 }

@@ -25,4 +25,19 @@ public:
 	void collide(bullet* sufferer);
 };
 
+class green_dam_bomb : public ether
+{
+public:
+	green_dam_bomb();
+	float clear_r;
+	void loop();
+};
+
+class green_dam_bomb_bullet : public green_dam_bullet
+{
+public:
+	green_dam_bomb_bullet(int type,float dmg,float x0,float y0,float angle,float speed,pic* image,float delay=0.0);
+	void loop();
+};
+
 #endif

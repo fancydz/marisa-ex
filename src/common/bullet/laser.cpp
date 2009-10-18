@@ -34,7 +34,7 @@ void laser::loop()
 		r=r0*turn_off_sts/turn_off_time;
 	}
 	//
-	if(turn_on_sts!=0||turn_off_sts!=0||(!attack)) return;
+	if(turn_on_sts!=0||turn_off_sts!=0||(!attack)||(r/r0<0.01)) return;
 	//
 	float dx,dy,xx,yy;
 	dx=estg->self->real_x-real_x;
@@ -48,6 +48,15 @@ void laser::loop()
 		estg->self->miss();
 	if(xx>(l1+l2+l2)&&xx<(l1+l2+l2+l1)&&fabs(yy)<((l1+l2+l2+l1-xx)/l1*r*0.5))
 		estg->self->miss();
+	if(age%10==0)
+	{
+		if(xx>0&&xx<l1&&fabs(yy)<(xx/l1*r*0.5+0.05))
+			estg->self->graze();
+		if(xx>l1&&xx<(l1+l2+l2)&&fabs(yy)<(r*0.5+0.05))
+			estg->self->graze();
+		if(xx>(l1+l2+l2)&&xx<(l1+l2+l2+l1)&&fabs(yy)<((l1+l2+l2+l1-xx)/l1*r*0.5+0.05))
+			estg->self->graze();
+	}
 	//
 }
 

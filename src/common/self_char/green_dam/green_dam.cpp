@@ -98,7 +98,7 @@ void green_dam::fire()
 
 void green_dam::bomb()
 {
-	estg->shake(120);
+	estg->add(new green_dam_bomb());
 }
 
 void green_dam::loop()
@@ -133,4 +133,54 @@ void green_dam_bullet::collide(bullet* sufferer)
 	else
 		estg->add(new ge_ps(estg->self->sres.img["attack_dust_b"],real_x,real_y,ENEMY_LAYER+1));
 	self_bullet::collide(sufferer);
+}
+
+green_dam_bomb::green_dam_bomb()
+{
+	estg->play_se("se_gun00",0.5);
+	clear_r=0.1;
+	estg->shake(360);
+	estg->self->inv(360);
+}
+
+void green_dam_bomb::loop()
+{
+	int i;
+	for(i=0;i<3;i++)
+	{
+		estg->add(new green_dam_bomb_bullet(0,0,0,0,hge->Random_Float(0,4),hge->Random_Float(0.6,1.6),estg->self->sres.img["bullet_a"]));
+		estg->add(new green_dam_bomb_bullet(3,0,0,0,hge->Random_Float(0,4),hge->Random_Float(0.6,1.6),estg->self->sres.img["bullet_b"]));
+	}
+	if(age<240)
+	{
+		clear_r+=0.012;
+		list<bullet*>::iterator iter;
+		for(i=0;i<MAX_LAYER;i++)
+			for(iter=estg->blist[ENEMY_BULLET][i].begin();iter!=estg->blist[ENEMY_BULLET][i].end();iter++)
+				if((*iter)->age>0&&(*iter)->suffer&&is_collide(*iter,estg->self,clear_r))
+					(*iter)->kill();
+	}
+	if(age==120)
+		clear_r=0.1;
+	if(age==345)
+	{
+		estg->play_se("se_tan01",0.7);
+		estg->kill_all_bullet();
+	}
+	if(age==360)
+		destroy();
+}
+
+green_dam_bomb_bullet::green_dam_bomb_bullet(int type,float dmg,float x0,float y0,float angle,float speed,pic *image,float delay)
+:green_dam_bullet(type,dmg,x0,y0,angle,speed,image,delay)
+{
+	hp=0;
+}
+
+void green_dam_bomb_bullet::loop()
+{
+	straight_self_bullet::loop();
+	hp=0.1*age;
+	if(_type==3&&hge->Random_Int(0,5)==0)
+		_type=hge->Random_Int(1,2);
 }

@@ -111,6 +111,7 @@ void self_bullet::collide(bullet* sufferer)
 {
 	estg->add(new ge_ps(res->SPARK[1],sufferer->real_x,sufferer->real_y,ENEMY_LAYER-1));
 	estg->play_se("se_damage00",0.1);
+	estg->data.score+=int(15*hp);
 	sufferer->hp-=(this->hp*sufferer->dmg_factor);
 	if(sufferer->hp<=0.0) sufferer->kill();
 	destroy();

@@ -12,8 +12,6 @@ straight_self_bullet::straight_self_bullet(int type,float dmg,float x0,float y0,
 	img=image;
 	startx=x0;
 	starty=y0;
-	if(type<0) type=0;
-	if(type>2) type=2;
 	_type=type;
 }
 
@@ -26,7 +24,7 @@ void straight_self_bullet::loop()
 		update_xy();
 		aim();
 	}
-	if(age==10)
+	if(age==3)
 		aim();
 	x=age*_speed;
 }

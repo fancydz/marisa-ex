@@ -22,7 +22,27 @@ public:
 	void draw();
 	void loop();
 	void cast();
+	void kill();
+	bool hide_info;
+	struct sc_info_t
+	{
+		float max_hp;
+		float time_1;
+		float time_2;
+		float time_3;
+	} sc_info;
 	void move_to(float des_x,float des_y,int time_spend=60);
+	bool time_warner_created;
+	int score_save;
+	void start_card();
+	void end_card();
+};
+
+class time_warner : public ether
+{
+public:
+	time_warner();
+	void loop();
 };
 
 #endif

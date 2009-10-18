@@ -18,6 +18,7 @@ item::item(bullet* p)
 
 void item::loop()
 {
+	grazed=true;
 	if(attracted)
 	{
 		float dx,dy,dr;
@@ -67,11 +68,12 @@ void bullet_corpse::collide(bullet *sufferer)
 {
 	dead=true;
 	estg->play_se("se_item00",0.2);
+	estg->data.score+=int(BULLET_BONUS*(1+estg->data.graze/GRAZE_FACTOR));
 }
 
 point::point(bullet* p):item(p)
 {
-	type=(estg->self->sts+104.5)/19;
+	type=10;
 	img=res->POINT[type];
 	attracted=false;
 }
@@ -79,11 +81,9 @@ point::point(bullet* p):item(p)
 void point::collide(bullet *sufferer)
 {
 	dead=true;
+	estg->data.point++;
+	estg->data.score+=int(POINT_BONUS*(1+estg->data.graze/GRAZE_FACTOR));
 	estg->play_se("se_item00",0.2);
-	if(estg->self->slow) estg->self->sts+=1.0;
-	else estg->self->sts-=1.0;
-	if(estg->self->sts>100.0) estg->self->sts=100.0;
-	if(estg->self->sts<-100.0) estg->self->sts=-100.0;
 }
 
 void point::loop()

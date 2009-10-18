@@ -21,13 +21,17 @@ public:
 	~self_char();
 	bool slow;
 	bool no_bomb;
+	bool card_get;
 	int inv_sts;
+	int dying_sts;
 	void inv(int t=60);
 	int cd;
 	int current_cd; 
 	virtual void fire()=0;
 	virtual void bomb()=0;
 	virtual void miss();
+	virtual void graze();
+	float graze_freq;
 	void act();
 	void find_tar();
 	float high_speed,low_speed;
@@ -44,6 +48,14 @@ public:
 	HTEXTURE char_tex;
 	void draw();
 	resource sres;
+};
+
+class miss_protector : public ether
+{
+public:
+	miss_protector();
+	float clear_r;
+	void loop();
 };
 
 #endif
