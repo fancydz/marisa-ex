@@ -27,10 +27,15 @@ ESTG::ESTG()
 	bg_trans_time=60;
 	bg_trans_status=0;
 	se_volume=1.0;
-	bgm_volume=1.0;
+	bgm_volume=0.0;
 	bgm.next_bgm=0;
 	bgm.bgm_chn=0;
 	bgm.fade_status=0;
+	data.graze=data.object=data.object_alive=data.point=data.score=data.score_show=0;
+	data.spell=3;
+	data.player=100;
+	hp_bar=-1.0;
+	count_down_timer=-1.0;
 }
 
 inline void ESTG::add_self(int _self)
@@ -83,6 +88,8 @@ ESTG::~ESTG(){}
 
 list<bullet*>::iterator ESTG::add(bullet* pbullet)
 {
+	data.object++;
+	data.object_alive++;
 	blist[pbullet->attr][pbullet->layer].push_front(pbullet);
 	return pbullet->it=blist[pbullet->attr][pbullet->layer].begin();
 }
@@ -118,6 +125,15 @@ void ESTG::loop()
 		yos=5*sin(float(shake_status*(shake_status+3)));
 	}
 	//
+	//score
+	int m=data.score-data.score_show;
+	if(m<2)
+		data.score_show=data.score;
+	else if(m<20)
+		data.score_show+=2;
+	else
+		data.score_show+=int((data.score-data.score_show)*0.1);
+	//
 }
 
 void ESTG::shake(int duration)
@@ -138,6 +154,7 @@ void ESTG::run_scripts()//in fact, they are NOT scripts.
 				{
 					delete (*iter);
 					iter=blist[i][j].erase(iter);
+					data.object_alive--;
 					continue;
 				}
 				iter++;
@@ -171,7 +188,19 @@ void ESTG::run_scripts()//in fact, they are NOT scripts.
 	//collide of ENEMY_BULLET and SELF_CHAR
 	for(j=0;j<MAX_LAYER;j++)
 		for(iter=blist[ENEMY_BULLET][j].begin();iter!=blist[ENEMY_BULLET][j].end();iter++)
+		{
 			if(is_collide(*iter,self)) (*iter)->collide(self);
+			if(is_collide(*iter,self,0.05)&&(*iter)->age>1)
+			{
+				if(!(*iter)->grazed)
+				{
+					estg->self->graze();
+					(*iter)->grazed=true;
+				}
+			}
+			else
+				(*iter)->grazed=false;
+		}
 	//
 	//collide of SELF_BULLET and ENEMY
 	for(j=0;j<MAX_LAYER;j++)

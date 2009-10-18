@@ -17,64 +17,64 @@ marisa_2::marisa_2(float x0,float y0):marisa(x0,y0)
 void marisa_2::loop()
 {
 	if(age>=0       && age<  SC_OS)
-		nm_1(age);
+		nm_1(age%SC_OS);
 
 	if(age>=SC_OS   && age<2*SC_OS)
-		sc_1(age-1*SC_OS);
+		sc_1(age%SC_OS);
 
 	if(age>=SC_OS*2 && age<3*SC_OS)
-		nm_2(age-2*SC_OS);
+		nm_2(age%SC_OS);
 
 	if(age>=SC_OS*3 && age<4*SC_OS)
-		sc_2(age-3*SC_OS);
+		sc_2(age%SC_OS);
 
 	if(age>=SC_OS*4 && age<5*SC_OS)
-		nm_3(age-4*SC_OS);
+		nm_3(age%SC_OS);
 
 	if(age>=SC_OS*5 && age<6*SC_OS)
-		sc_3(age-5*SC_OS);
+		sc_3(age%SC_OS);
 
 	if(age>=SC_OS*6 && age<7*SC_OS)
-		nm_4(age-6*SC_OS);
+		nm_4(age%SC_OS);
 
 	if(age>=SC_OS*7 && age<8*SC_OS)
-		sc_4(age-7*SC_OS);
+		sc_4(age%SC_OS);
 
 	if(age>=SC_OS*8 && age<9*SC_OS)
-		nm_5(age-8*SC_OS);
+		nm_5(age%SC_OS);
 
 	if(age>=SC_OS*9 && age<10*SC_OS)
-		sc_5(age-9*SC_OS);
+		sc_5(age%SC_OS);
 
 	if(age>=SC_OS*10 && age<11*SC_OS)
-		nm_6(age-10*SC_OS);
+		nm_6(age%SC_OS);
 
 	if(age>=SC_OS*11 && age<12*SC_OS)
-		sc_6(age-11*SC_OS);
+		sc_10(age%SC_OS);
 
 	if(age>=SC_OS*12 && age<13*SC_OS)
-		nm_7(age-12*SC_OS);
+		nm_7(age%SC_OS);
 
 	if(age>=SC_OS*13 && age<14*SC_OS)
-		sc_7(age-13*SC_OS);
+		sc_7(age%SC_OS);
 
 	if(age>=SC_OS*14 && age<15*SC_OS)
-		nm_8(age-14*SC_OS);
+		nm_8(age%SC_OS);
 
 	if(age>=SC_OS*15 && age<16*SC_OS)
-		sc_8(age-15*SC_OS);
+		sc_9(age%SC_OS);
 
 	if(age>=SC_OS*16 && age<17*SC_OS)
-		nm_9(age-16*SC_OS);
+		nm_9(age%SC_OS);
 
 	if(age>=SC_OS*17 && age<18*SC_OS)
-		sc_9(age-17*SC_OS);
+		sc_6(age%SC_OS);
 
 	if(age>=SC_OS*18 && age<19*SC_OS)
-		sc_10(age-18*SC_OS);
+		sc_6(age%SC_OS);
 
 	if(age>=SC_OS*19 && age<20*SC_OS)
-		escape(age-19*SC_OS);
+		escape(age%SC_OS);
 
 	boss::loop();
 }
@@ -84,8 +84,12 @@ void marisa_2::sc_1(int t)
 	int i;
 	if(t==1)
 	{
+		start_card();
 		estg->set_bg(new marisa_bg());
-		hp=1500;
+		sc_info.max_hp=hp=750;
+		sc_info.time_1=5;
+		sc_info.time_2=25;
+		sc_info.time_3=60;
 		move_to(0,0.3);
 	}
 	if(t==90)
@@ -93,12 +97,12 @@ void marisa_2::sc_1(int t)
 			estg->add(new marisa_2_1_laser(i));
 	if(t>60)
 	{
-		if(t%120==1)
+		if(t%150==1)
 		{
 			estg->add(new sector<>(real_x,real_y,0,0.12,res->SSTAR[13],false,80,1,0.05,0,0,0,0,0,0,-2,0,0));
 			estg->play_se("se_tan00",0.15);
 		}
-		if(t%120==51)
+		if(t%150==76)
 		{
 			estg->add(new sector<>(real_x,real_y,0.025,0.12,res->SSTAR[13],false,80,1,0.05,0,0,0,0,0,0,2,0,0));
 			estg->play_se("se_tan00",0.15);
@@ -111,8 +115,12 @@ void marisa_2::sc_2(int t)
 	int i;
 	if(t==1)
 	{
+		start_card();
 		estg->set_bg(new marisa_bg());
-		hp=1250;
+		sc_info.max_hp=hp=750;
+		sc_info.time_1=5;
+		sc_info.time_2=25;
+		sc_info.time_3=60;
 		move_to(0,0.3);
 	}
 	if(t==90)
@@ -135,8 +143,12 @@ void marisa_2::sc_3(int t)
 	int i;
 	if(t==1)
 	{
+		start_card();
 		estg->set_bg(new marisa_bg());
-		hp=1000;
+		sc_info.max_hp=hp=750;
+		sc_info.time_1=5;
+		sc_info.time_2=25;
+		sc_info.time_3=60;
 		move_to(0.0,0.3);
 	}
 	if(t==120)
@@ -150,8 +162,8 @@ void marisa_2::sc_3(int t)
 			(*estg->add(new marisa_2_3_laser(-1.4,1.0,-1+i*0.025,6)))->age=i*3-120;
 	if(t>60)
 	{
-		x2=sin(t*0.01)*0.03;
-		y2=0.3+sin(t*0.003)*0.1;
+		x2=sin((t-60)*0.01)*0.1;
+		y2=0.3+sin((t-60)*0.003)*0.15;
 	}
 }
 
@@ -160,8 +172,12 @@ void marisa_2::sc_4(int t)
 	int i,j,rot0;
 	if(t==1)
 	{
+		start_card();
 		estg->set_bg(new marisa_bg());
-		hp=1500;
+		sc_info.max_hp=hp=750;
+		sc_info.time_1=10;
+		sc_info.time_2=40;
+		sc_info.time_3=60;
 		move_to(0,0);
 	}
 	if(t>=60&&t<=135&&t%15==0)
@@ -176,8 +192,8 @@ void marisa_2::sc_4(int t)
 		for(i=1;i<7;i++)
 		{
 			rot0=hge->Random_Float(0,4);
-			for(j=0;j<(i*10+20);j++)
-				estg->add(new marisa_2_4_star(rot0+float(j)/(i*10+20)*4,0.0016+0.0008*i));
+			for(j=0;j<(i*9+18);j++)
+				estg->add(new marisa_2_4_star(rot0+float(j)/(i*9+18)*4,0.0016+0.0008*i));
 		}
 	}
 	if(t%720==120&&t>720)
@@ -188,17 +204,21 @@ void marisa_2::sc_5(int t)
 {
 	if(t==1)
 	{
+		start_card();
 		estg->set_bg(new marisa_bg());
-		hp=750;
+		sc_info.max_hp=hp=750;
+		sc_info.time_1=5;
+		sc_info.time_2=25;
+		sc_info.time_3=60;
 	}
 	if(t%480==  1) move_to(0.0,0.3);
 	if(t%480==121) move_to(0.15,0.35);
 	if(t%480==241) move_to(0.0,0.3);
 	if(t%480==361) move_to(-0.15,0.35);
 	if(t==60) estg->add(new marisa_2_5_comet());
-	if(t>60&&t%30==10)
+	if(t>60&&t%45==10)
 	{
-		estg->add(new sector<>(real_x,real_y,age*0.002083,0.2,res->SSTAR[6],false,32,1,0.125,0,0,0,0,0,0,2,0,0));
+		estg->add(new sector<>(real_x,real_y,age*0.002083,0.13,res->SSTAR[6],false,32,1,0.125,0,0,0,0,0,0,2,0,0));
 		estg->play_se("se_tan00",0.15);
 	}
 }
@@ -207,9 +227,28 @@ void marisa_2::sc_6(int t)
 {
 	static float dis=0.0;
 	static float last_x,last_y;
-	if(t==30) estg->sres.val["sc6"]=0.0;
 	float xx,yy;
-	if(t>60)
+	if(t==1)
+	{
+		start_card();
+		estg->set_bg(new marisa_bg());
+		sc_info.max_hp=hp=10;
+		sc_info.time_1=66;
+		sc_info.time_2=70;
+		sc_info.time_3=70;
+		estg->sres.val["sc6_exp"]=-1.0;
+		estg->sres.val["sc6"]=0.0;
+		move_to(0,0.68);
+		suffer=false;
+	}
+	if(t==60)
+	{
+		estg->add(new marisa_2_6_minion(0.45,0));
+		estg->add(new marisa_2_6_minion(0.45,1));
+		estg->add(new marisa_2_6_minion(0.45,2));
+	}
+	//
+	if(t>600)
 	{
 		xx=last_x-estg->self->real_x;
 		yy=last_y-estg->self->real_y;
@@ -223,20 +262,22 @@ void marisa_2::sc_6(int t)
 	}
 	last_x=estg->self->real_x;
 	last_y=estg->self->real_y;
-	if(t==1)
+	//
+	if(t==1800)
 	{
-		estg->set_bg(new marisa_bg());
-		hp=1250;
+		estg->sres.val["sc6_exp"]=1.0;
+		estg->sres.val["sc6_acc"]=estg->sres.val["sc6"]/2.0;
 	}
-	if(t%480==  1) move_to(0.0,0.4);
-	if(t%480==121) move_to(0.1,0.45);
-	if(t%480==241) move_to(0.0,0.4);
-	if(t%480==361) move_to(-0.1,0.45);
-	if(t>60&&t%60==10)
+	if(t==2700)
 	{
-		estg->play_se("se_tan00",0.15);
-		estg->add(new sector<>(real_x,real_y,0,0.2,res->BSTAR[1],true,25,1,0.16,0,0,0,0,0,0,-2,0,0));
+		suffer=true;
+		move_to(0,0.45);
 	}
+	if(t>2700)
+	{
+		if(age%240==0) estg->add(new marisa_2_6_cannon());
+	}
+	estg->data.score+=50;
 }
 
 void marisa_2::sc_7(int t)
@@ -244,9 +285,13 @@ void marisa_2::sc_7(int t)
 	int i;
 	if(t==1)
 	{
+		start_card();
 		estg->set_bg(new marisa_bg());
 		move_to(0,0);
-		hp=750;
+		sc_info.max_hp=hp=750;
+		sc_info.time_1=5;
+		sc_info.time_2=25;
+		sc_info.time_3=60;
 	}
 	if(t%750==90)
 		for(i=0;i<5;i++)
@@ -269,23 +314,18 @@ void marisa_2::sc_8(int t)
 	int i;
 	if(t==1)
 	{
+		start_card();
 		estg->set_bg(new marisa_bg());
 		move_to(0,0.2);
-		hp=750;
+		sc_info.max_hp=hp=750;
+		sc_info.time_1=5;
+		sc_info.time_2=25;
+		sc_info.time_3=60;
 	}
-	if(t>60&&t%3==1)
-		if(t%180<30)
-		{
-			estg->play_se("se_tan00",0.15);
-			for(i=0;i<25;i++)
-				estg->add(new marisa_2_8_bullet(real_x,real_y,+t*0.0033+i*0.16,0.2,res->BARROW[12],t%180,i));
-		}
-		else if(t%180>90&&t%180<=120)
-		{
-			estg->play_se("se_tan00",0.15);
-			for(i=0;i<25;i++)
-				estg->add(new marisa_2_8_bullet(real_x,real_y,-t*0.0033+i*0.16,0.2,res->BARROW[12],t%180,i));
-		}
+	if(t>60&&t%480==120)
+		estg->add(new marisa_2_8_laser(-0.45,-0.55));
+	if(t>60&&t%480==360)
+		estg->add(new marisa_2_8_laser(+0.45,-0.55));
 }
 
 void marisa_2::sc_9(int t)
@@ -293,8 +333,12 @@ void marisa_2::sc_9(int t)
 	static float rot0=0;
 	if(t==1)
 	{
+		start_card();
 		estg->set_bg(new marisa_bg());
-		hp=750;
+		sc_info.max_hp=hp=750;
+		sc_info.time_1=5;
+		sc_info.time_2=25;
+		sc_info.time_3=60;
 	}
 	if(t==60)
 	{
@@ -309,7 +353,7 @@ void marisa_2::sc_9(int t)
 	{
 		estg->play_se("se_tan00",0.1);
 		float v=hge->Random_Float(0.13,0.3);
-		estg->add(new sector<>(real_x,real_y,(2*(t%2)-1)*t*0.067+hge->Random_Float(0.9,1.1),v,res->BARROW[hge->Random_Int(0,15)],false,1,7,0,0,0,v*0.015,0,0,0));
+		estg->add(new sector<>(real_x,real_y,(2*(t%2)-1)*t*0.067+hge->Random_Float(0.9,1.1),v,res->BARROW[hge->Random_Int(0,15)],false,1,8,0,0,0,v*0.015,0,0,0));
 	}
 }
 
@@ -317,8 +361,12 @@ void marisa_2::sc_10(int t)
 {
 	if(t==1)
 	{
+		start_card();
 		estg->set_bg(new marisa_bg());
-		hp=750;
+		sc_info.max_hp=hp=750;
+		sc_info.time_1=5;
+		sc_info.time_2=25;
+		sc_info.time_3=60;
 	}
 	if(t%480==  1) move_to(-0.2,0.45);
 	if(t%480==121) move_to(0.4,0.25);
@@ -343,7 +391,10 @@ void marisa_2::nm_1(int t)
 {
 	if(t==1)
 	{
-		hp=750;
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
 	}
 	if(t%960==  1) move_to(0.0,0.35);
 	if(t%960==241) move_to(0.2,0.3);
@@ -352,10 +403,10 @@ void marisa_2::nm_1(int t)
 	if(t>180&&t%60==1)
 	{
 		estg->play_se("se_tan00",0.15);
-		estg->add(new sector<>(real_x,real_y,t*0.12345+0.01,0.20,res->BARROW[0],false,50,1,0.08,0,0,0));
-		estg->add(new sector<>(real_x,real_y,t*0.12345+0.03,0.24,res->BARROW[4],false,50,1,0.08,0,0,0));
-		estg->add(new sector<>(real_x,real_y,t*0.12345+0.05,0.28,res->BARROW[8],false,50,1,0.08,0,0,0));
-		estg->add(new sector<>(real_x,real_y,t*0.12345+0.07,0.32,res->BARROW[12],false,50,1,0.08,0,0,0));
+		estg->add(new sector<>(real_x,real_y,t*3e-4+0.01,0.20,res->BARROW[0],false,50,1,0.08,0,0,0));
+		estg->add(new sector<>(real_x,real_y,t*3e-4+0.03,0.24,res->BARROW[4],false,50,1,0.08,0,0,0));
+		estg->add(new sector<>(real_x,real_y,t*3e-4+0.05,0.28,res->BARROW[8],false,50,1,0.08,0,0,0));
+		estg->add(new sector<>(real_x,real_y,t*3e-4+0.07,0.32,res->BARROW[12],false,50,1,0.08,0,0,0));
 	}
 }
 
@@ -365,7 +416,10 @@ void marisa_2::nm_2(int t)
 	if(t==1)
 	{
 		estg->set_bg(new road_bg());
-		hp=750;
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
 	}
 	if(t%960==  1) move_to(0.0,0.35);
 	if(t%960==241) move_to(0.2,0.3);
@@ -374,7 +428,7 @@ void marisa_2::nm_2(int t)
 	if(t>180&&t%30==1)
 	{
 		estg->play_se("se_tan00",0.15);
-		for(i=0;i<36;i++)
+		for(i=0;i<25;i++)
 			for(k=0;k<4;k++)
 				estg->add(new straight_bullet(real_x,real_y,hge->Random_Float(0,4),k*0.03+0.15+hge->Random_Float(-0.015,0.015),res->BARROW[k*4]));
 	}
@@ -385,7 +439,10 @@ void marisa_2::nm_3(int t)
 	if(t==1)
 	{
 		estg->set_bg(new road_bg());
-		hp=750;
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
 	}
 	if(t%720==  1) move_to(0.1,0.35);
 	if(t%720==181) move_to(0.2,0.3);
@@ -406,7 +463,10 @@ void marisa_2::nm_4(int t)
 	if(t==1)
 	{
 		estg->set_bg(new road_bg());
-		hp=750;
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
 	}
 	if(t%960==  1) move_to(0.0,0.35);
 	if(t%960==241) move_to(0.1,0.3);
@@ -427,7 +487,10 @@ void marisa_2::nm_5(int t)
 	if(t==1)
 	{
 		estg->set_bg(new road_bg());
-		hp=750;
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
 	}
 	if(t%960==  1) move_to(0.0,0.35);
 	if(t%960==241) move_to(0.2,0.3);
@@ -449,7 +512,10 @@ void marisa_2::nm_6(int t)
 	if(t==1)
 	{
 		estg->set_bg(new road_bg());
-		hp=750;
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
 	}
 	if(t%960==  1) move_to(0.0,0.35);
 	if(t%960==241) move_to(0.2,0.3);
@@ -482,7 +548,10 @@ void marisa_2::nm_7(int t)
 	if(t==1)
 	{
 		estg->set_bg(new road_bg());
-		hp=750;
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
 	}
 	if(t%960==  1) move_to(0.0,0.35);
 	if(t%960==241) move_to(0.2,0.3);
@@ -504,7 +573,10 @@ void marisa_2::nm_8(int t)
 	if(t==1)
 	{
 		estg->set_bg(new road_bg());
-		hp=750;
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
 	}
 	if(t%480==  1) move_to(0.1,0.35);
 	if(t%480==121) move_to(0.3,0.3);
@@ -534,7 +606,10 @@ void marisa_2::nm_9(int t)
 	if(t==1)
 	{
 		estg->set_bg(new road_bg());
-		hp=750;
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
 	}
 	if(t%960==  1) move_to(0.1,0.35);
 	if(t%960==241) move_to(0.3,0.3);
@@ -552,6 +627,7 @@ void marisa_2::nm_9(int t)
 
 void marisa_2::escape(int t)
 {
+	hide_info=true;
 	suffer=false;
 	if(t==60)
 	{
@@ -568,10 +644,9 @@ marisa_2::~marisa_2()
 
 void marisa_2::kill()
 {
-	estg->play_se("se_enep01",0.25);
-	age=(age/SC_OS)*SC_OS+SC_OS;
-	hp=MAX_HP;
-	estg->destroy_all_enemy();
+	if((age/SC_OS)%2==1)
+		drop_point(20);
+	boss::kill();
 }
 
 marisa_2_1_laser::marisa_2_1_laser(int index):laser((index%2)*6)
@@ -776,7 +851,7 @@ void marisa_2_4_star::loop()
 		cx=real_x;
 		cy=real_y;
 		x=0;
-		crot=2+crot+hge->Random_Float(-1.8,+1.8);
+		crot=2+crot+hge->Random_Float(-2.0,+2.0);
 	}
 	if(age>240)
 	{
@@ -819,24 +894,85 @@ marisa_2_6_bullet::marisa_2_6_bullet(int index,float x0,float y0)
 
 void marisa_2_6_bullet::loop()
 {
-	if(age==25) attack=true;
-	if(_index<(estg->sres.val["sc6"]-32))
+	if(age==60) attack=true;
+	if(estg->sres.val["sc6_exp"]>0)
 	{
-		estg->play_se("se_tan00",0.15);
-		int i;
-		for(i=0;i<8;i++)
-			estg->add(new straight_bullet(real_x,real_y,hge->Random_Float(0,4),hge->Random_Float(0.1,0.3),res->BARROW[_type*2]));
-		dead=true;
+		if(_index<(estg->sres.val["sc6"]-estg->sres.val["sc6_acc"]))
+		{
+			estg->play_se("se_tan00",0.15);
+			int i;
+			for(i=0;i<4;i++)
+				estg->add(new straight_bullet(real_x,real_y,hge->Random_Float(0,4),hge->Random_Float(0.1,0.3),res->BARROW[12]));
+			dead=true;
+		}
+	}
+	else
+	{
+		if(_index<(estg->sres.val["sc6"]/2.0))
+			dead=true;
 	}
 }
 
 void marisa_2_6_bullet::draw()
 {
 	res->img["enemy_aura"]->RenderEx(x2scr(real_x),y2scr(real_y),-estg->ticker*0.01,0.5);
-	if(age>25)
+	if(age>45)
 		res->PREMASK[_type]->RenderEx(x2scr(real_x),y2scr(real_y),estg->ticker*0.01);
 	else
-		res->PREMASK[_type]->RenderEx(x2scr(real_x),y2scr(real_y),estg->ticker*0.01,0.08*age);
+		res->PREMASK[_type]->RenderEx(x2scr(real_x),y2scr(real_y),estg->ticker*0.01,0.04*age);
+}
+
+marisa_2_6_minion::marisa_2_6_minion(float x0,int index)
+{
+	_index=index;
+	this->_type=index*2;
+	has_aura=true;
+	x=x0;
+	crot=1.33333*index;
+	turn_on();
+	r0=0.1;
+	l1=0.2;
+}
+
+void marisa_2_6_minion::loop()
+{
+	laser::loop();
+	if(age<60) node=0.025*age;
+	if(age%45==0&&age>60)
+	{
+		estg->add(new marisa_2_6_laser(real_x,real_y,_type));
+		estg->play_se("se_lazer00",0.2);
+	}
+	if(age%1200<540)
+		crot+=0.005;
+	else if(age%1200>600&&age%1200<1140)
+		crot-=0.005;
+	if(age>2520)
+	{
+		turn_off();
+		x+=0.005;
+	}
+	if(age==2580)
+		destroy();
+}
+
+marisa_2_6_laser::marisa_2_6_laser(float x0,float y0,int type):laser(type)
+{
+	r0=0.013;
+	l2=0.0;
+	l1=0.06;
+	cx=x0;
+	cy=y0;
+	crot=v2a(estg->self->real_x-x0,estg->self->real_y-y0);
+	x=-0.05;
+	node=-1.0;
+	turn_on(5);
+}
+
+void marisa_2_6_laser::loop()
+{
+	laser::loop();
+	x+=0.005;
 }
 
 marisa_2_7_laser::marisa_2_7_laser(int index)
@@ -850,6 +986,31 @@ marisa_2_7_laser::marisa_2_7_laser(int index)
 	node=1;
 	has_aura=true;
 	r0=0.03;
+}
+
+marisa_2_6_cannon::marisa_2_6_cannon()
+{
+	cy=0.4;
+	crot=v2a(estg->self->real_x,estg->self->real_y-0.4);
+	_type=6;
+	l1=0.5;
+	r0=0.5;
+	turn_on(60);
+	node=-1.0;
+}
+
+void marisa_2_6_cannon::loop()
+{
+	laser::loop();
+	if(age==180) 
+		turn_off();
+	if(age==210)
+		destroy();
+	if(age==30)
+	{
+		estg->play_se("se_nep00",0.7);
+		estg->shake();
+	}
 }
 
 void marisa_2_7_laser::loop()
@@ -882,48 +1043,26 @@ void marisa_2_7_bullet::loop()
 	rot+=spin*0.03;
 }
 
-marisa_2_8_bullet::marisa_2_8_bullet(float x0,float y0,float angle,float speed,pic* image,int index,int index2)
-:straight_bullet(x0,y0,angle,speed,image)
+marisa_2_8_laser::marisa_2_8_laser(float x0,float y0)
 {
-	_index=index;
-	_index2=index2;
+	cx=x0;
+	cy=y0;
+	crot=v2a(estg->self->real_x-x0,estg->self->real_y-y0);
+	turn_on(30);
+	r0=0.1;
+	node=2.0;
+	l2=0.7;
+	has_aura=true;
+	c=0x80FFFFFF;
 }
 
-void marisa_2_8_bullet::loop()
+void marisa_2_8_laser::loop()
 {
-	straight_bullet::loop();
-	if(age==90)
-	{
-		if(_index%2==0)
-		{
-			if(_index<90)
-				estg->add(new straight_bullet(real_x,real_y,crot+(_index%5)*0.3-0.6,0.1+_index*0.005,res->BARROW[8]));
-			else
-				estg->add(new straight_bullet(real_x,real_y,crot-(_index%5)*0.3+0.6,0.1+(_index-90)*0.005,res->BARROW[4]));
-		}
-		if(_index== 1&&_index2%5==0)
-			estg->add(new marisa_2_8_bullet2(real_x,real_y,crot-2.4,0.115,res->BARROW[0]));
-		if(_index==91&&_index2%5==0)
-			estg->add(new marisa_2_8_bullet2(real_x,real_y,crot-1.6,0.115,res->BARROW[0]));
-		destroy();
-	}
-}
-
-marisa_2_8_bullet2::marisa_2_8_bullet2(float x0,float y0,float angle,float speed,pic *image)
-:straight_bullet(x0,y0,angle,speed,image)
-{
-}
-
-void marisa_2_8_bullet2::loop()
-{
-	straight_bullet::loop();
-	if(age==240)
-	{
-		estg->play_se("se_kira00",0.07);
-		estg->add(new sector<>(real_x,real_y,crot,0.22,res->BARROW[0],false,11,1,0.14,0,0,0));
-		estg->add(new sector<>(real_x,real_y,crot,0.25,res->BARROW[0],false,10,1,0.14,0,0,0));
-		destroy();
-	}
+	laser::loop();
+	if(age>15&&age<105)
+		turn_on_sts++;
+	if(age==105)
+		c=0xFFFFFFFF;
 }
 
 marisa_2_9_minion::marisa_2_9_minion(float x0,float y0)

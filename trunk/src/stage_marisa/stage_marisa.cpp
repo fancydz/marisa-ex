@@ -32,8 +32,8 @@ stage_marisa::stage_marisa()
 	estg->stage_master=this;
 	//
 	//
-	//age=10600;
-	age=5900;
+	age=10600;
+	//age=5900;
 	//
 }
 

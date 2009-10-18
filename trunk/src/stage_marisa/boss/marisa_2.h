@@ -105,6 +105,28 @@ public:
 	void draw();
 };
 
+class marisa_2_6_minion : public laser
+{
+public:
+	marisa_2_6_minion(float x0,int index);
+	int _index;
+	void loop();
+};
+
+class marisa_2_6_laser : public laser
+{
+public:
+	marisa_2_6_laser(float x0,float y0,int type);
+	void loop();
+};
+
+class marisa_2_6_cannon : public laser
+{
+public:
+	marisa_2_6_cannon();
+	void loop();
+};
+
 class marisa_2_7_laser : public laser
 {
 public:
@@ -123,18 +145,10 @@ public:
 	float spin;
 };
 
-class marisa_2_8_bullet : public straight_bullet
+class marisa_2_8_laser : public laser
 {
 public:
-	marisa_2_8_bullet(float x0,float y0,float angle,float speed,pic* image,int index,int index2);
-	int _index,_index2;
-	void loop();
-};
-
-class marisa_2_8_bullet2 : public straight_bullet
-{
-public:
-	marisa_2_8_bullet2(float x0,float y0,float angle,float speed,pic* image);
+	marisa_2_8_laser(float x0,float y0);
 	void loop();
 };
 

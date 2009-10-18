@@ -70,6 +70,9 @@ public:
 	//
 	hgeDistortionMesh* LASER;
 	//
+	hgeFont* fnt;
+	pic* graze;
+	//
 	pic* GIRL_IMG[16][8];
 	cres();
 	~cres();

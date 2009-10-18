@@ -123,7 +123,8 @@ cres::cres()
 		POINT[i]=new pic(TEX["common_4"],i*16+1,33,14,14,4,4);
 	img["black"]=new pic(TEX["common_4"],80,208,32,32);
 	img["err"]=new pic(TEX["common_4"],1,193,62,62,32,32);
-	img["spectrum"]=new pic(TEX["common_4"],4,50,128,2);
+	img["hp_bar"]=new pic(TEX["common_4"],0,48,256,16);
+	img["hp_bar"]->SetHotSpot(0,0);
 	//test
 	TEX["test"]=hge->Texture_Load("img\\pearlbullet.png");
 	img["test"]=new pic(TEX["test"],0,0,32,32,4,4,true);
@@ -144,6 +145,7 @@ cres::cres()
 	img["comet"]=new pic(TEX["particles"],0,0,32,32,"img\\comet.psi",6,6);
 	img["comet_fast"]=new pic(TEX["particles"],0,0,32,32,"img\\comet_fast.psi",8,8);
 	img["cannon-warn"]=new pic(TEX["particles"],32,32,32,32,"img\\cannon-warn.psi",16,16);
+	graze=new pic(TEX["common_1"],32,144,16,16,"img\\graze.psi");
 	//image for girls
 	for(i=0;i<16;i++)
 		for(j=0;j<8;j++)
@@ -169,7 +171,13 @@ cres::cres()
 	snd["se_item01"]=new estg_se("snd\\se_item01.wav");
 	snd["se_graze"]=new estg_se("snd\\se_graze.wav");
 	snd["se_option"]=new estg_se("snd\\se_option.wav");
-	
+	snd["se_gun00"]=new estg_se("snd\\se_gun00.wav");
+	snd["se_timeout"]=new estg_se("snd\\se_timeout.wav");
+	snd["se_nep00"]=new estg_se("snd\\se_nep00.wav");
+	//
+	fnt=new hgeFont("img\\font1.fnt");
+	//fnt->SetScale(2.0);
+	//
 }
 
 cres::~cres()

@@ -26,6 +26,17 @@ public:
 	{
 		bool up,down,left,right,fire,slow,bomb;
 	} control;
+	struct data_t
+	{
+		int object;
+		int object_alive;
+		int point;
+		int player;
+		int spell;
+		int graze;
+		int score;
+		int score_show;
+	} data;
 	int ticker;
 	list<bullet*>::iterator add(bullet* pbullet);
 	inline void add_self(int _self);
@@ -58,6 +69,8 @@ public:
 	void play_bgm(HEFFECT se_bgm,float lp_end,float lp_lenth);
 	void destroy_all_enemy();
 	void kill_all_bullet();
+	float hp_bar;
+	float count_down_timer;
 	~ESTG();
 };
 
@@ -72,5 +85,15 @@ inline float y2scr(float y){return (estg->yos+estg->yorg+estg->ystr*y);}
 
 inline float uix2scr(float x){return (estg->xorg+estg->xstr*x);}
 inline float uiy2scr(float y){return (estg->yorg+estg->ystr*y);}
+
+//score calc
+#define BULLET_BONUS 15
+#define ATTACK_BONUS 15
+#define POINT_BONUS 3000
+#define GRAZE_BONUS 150
+#define TIME_BONUS 2000
+#define GRAZE_FACTOR 7500
+#define CARD_FACTOR 3
+//
 
 #endif

@@ -17,6 +17,10 @@ boss::boss(float x0,float y0)
 		cast_img[i]=0;
 	}
 	hostile=false;
+	sc_info.max_hp=MAX_HP;
+	sc_info.time_1=sc_info.time_2=sc_info.time_3=1000.0;
+	hide_info=false;
+	time_warner_created=false;
 }
 
 boss::~boss()
@@ -57,6 +61,38 @@ void boss::loop()
 	if(age>1)
 		if(estg->stage_master!=0)
 			estg->stage_master->age--;
+	//
+	t=(age%SC_OS)/60.0;
+	if(t<sc_info.time_1)
+		dmg_factor=0.0;
+	else if(t<sc_info.time_2)
+		dmg_factor=(t-sc_info.time_1)/(sc_info.time_2-sc_info.time_1);
+	else
+		dmg_factor=1.0;
+	estg->hp_bar=hp/sc_info.max_hp;
+	if(estg->hp_bar>1.0) estg->hp_bar=1.0;
+	estg->count_down_timer=sc_info.time_3-t;
+	if(hide_info)
+	{
+		estg->count_down_timer=-1.0;
+		estg->hp_bar=-1.0;
+	}
+	//
+	if(sc_info.time_3<t) boss::kill();
+	//
+	if(sc_info.time_3<t+10.0)
+	{
+		if(!time_warner_created)
+		{
+			estg->add(new time_warner());
+			time_warner_created=true;
+		}
+	}
+	else
+	{
+		time_warner_created=false;
+	}
+	//
 }
 
 void boss::draw()
@@ -89,4 +125,41 @@ void boss::move_to(float des_x,float des_y,int time_spend)
 	x1=x;y1=y;
 	x2=des_x;y2=des_y;
 	_time_spend=move_status=time_spend;
+}
+
+void boss::kill()
+{
+	end_card();
+	estg->play_se("se_enep01",0.25);
+	age=(age/SC_OS)*SC_OS+SC_OS;
+	hp=sc_info.max_hp=MAX_HP;
+	sc_info.time_1=sc_info.time_2=sc_info.time_3=1000.0;
+	estg->destroy_all_enemy();
+}
+
+void boss::start_card()
+{
+	estg->self->card_get=true;
+	score_save=estg->data.score;
+}
+
+void boss::end_card()
+{
+	if(estg->self->card_get)
+	{
+		estg->data.score+=int((estg->data.score-score_save)*(CARD_FACTOR-1))*(1+estg->data.graze/GRAZE_FACTOR);
+		estg->data.score+=int((sc_info.time_3-(age%SC_OS)/60.0)*TIME_BONUS)*(1+estg->data.graze/GRAZE_FACTOR);
+		estg->self->card_get=false;
+	}
+}
+
+time_warner::time_warner()
+{
+	hostile=true;
+}
+
+void time_warner::loop()
+{
+	if(age%60==10)
+		estg->play_se("se_timeout",0.7);
 }

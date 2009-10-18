@@ -29,8 +29,14 @@ void marisa_1::loop()
 void marisa_1::sc_1(int t)
 {
 	int i;
-	
-	if(t==10) hp=750.0;
+	if(t==1)
+	{
+		start_card();
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
+	}
 	if(t==60) estg->set_bg(new marisa_bg());
 	
 	if(t%960==  1) move_to(0.0,0.3);
@@ -40,19 +46,19 @@ void marisa_1::sc_1(int t)
 	
 	if(t>60)
 	{
-		if(t%4==0)
+		if(t%6==0)
 		{
 			int dir=hge->Random_Int(0,1)*2-1;
 			estg->add(new straight_bullet(0.55*dir,hge->Random_Float(-0.6,0.6),dir+1,hge->Random_Float(0.07,0.14),res->SSTAR[2*dir+4],false,0,2*dir,0,ENEMY_BULLET_LAYER));
 		}
-		if(t%90==10)
+		if(t%120==10)
 		{
 			estg->add(new sector<>(real_x,real_y,0.0,0.43,res->SSTAR[13],true,3,7,0.025,0,0,0.04,20.0,0.0,0.0, 2.0,0.0,0.0,1000,0.0,0.0));
 			estg->add(new sector<>(real_x,real_y,0.0,0.40,res->SSTAR[13],true,3,5,0.025,0,0,0.06, 0.0,0.0,0.0,-2.0,0.0,0.0,1000,0.0,0.0));
 		}
 		if(t%20==0)
 			estg->play_se("se_tan00",0.15);
-		if(t%180==30)
+		if(t%180==60)
 		{
 			for(i=0;i<5;i++)
 				estg->add(new cannon(hge->Random_Float(i*0.18-0.45,i*0.18-0.27),hge->Random_Float(-1.0,1.0),3.0,-3.0));
@@ -63,8 +69,14 @@ void marisa_1::sc_1(int t)
 void marisa_1::sc_2(int t)
 {
 	int i;
-	
-	if(t==10) hp=1350.0;
+	if(t==1)
+	{
+		start_card();
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
+	}
 	if(t==1) move_to(0.0,0.0);
 	if(t==180)
 	for(i=0;i<5;i++)
@@ -74,8 +86,14 @@ void marisa_1::sc_2(int t)
 void marisa_1::sc_3(int t)
 {
 	static int color_tick=0;
-	//init hp
-	if(t==10) hp=750;
+	if(t==1)
+	{
+		start_card();
+		sc_info.max_hp=hp=600;
+		sc_info.time_1=0;
+		sc_info.time_2=15;
+		sc_info.time_3=45;
+	}
 	//
 	//move
 	if(t%1500==  1) move_to(+0.0,0.4);
@@ -98,6 +116,7 @@ void marisa_1::sc_3(int t)
 
 void marisa_1::escape(int t)
 {
+	hide_info=true;
 	suffer=false;
 	if(t==60)
 	{
@@ -114,10 +133,8 @@ marisa_1::~marisa_1()
 
 void marisa_1::kill()
 {
-	estg->play_se("se_enep01",0.25);
-	age=(age/SC_OS)*SC_OS+SC_OS;
-	hp=MAX_HP;
-	estg->destroy_all_enemy();
+	drop_point(20);
+	boss::kill();
 }
 
 marisa_1_2_minion::marisa_1_2_minion(int index)
