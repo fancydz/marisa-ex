@@ -76,8 +76,11 @@ road_bg::~road_bg()
 
 void road_bg::loop()
 {
-	x=0.1*sin(age/120.0);
-	cx=0.2*cos(age/120.0);
+	//
+	speed=estg->sres.val["bg_speed"];
+	//
+	x=0.05*sin(age/120.0);
+	cx=0.1*cos(age/120.0);
 	/*
 	if(hge->Input_GetKeyState(HGEK_1)) y+=0.01;
 	if(hge->Input_GetKeyState(HGEK_2)) y-=0.01;
@@ -86,7 +89,8 @@ void road_bg::loop()
 	cout<<"y="<<y<<" cy="<<cy<<endl;
 	*/
 	//cx=-0.4*estg->self->x;
-	if(age%20==0)
+
+	/*if(age%20==0)
 		tree.push_front(new tree_c(0,hge->Random_Float(-1.2,-0.5),0.0,15+hge->Random_Float(-0.2,0.2),hge->Random_Float(-0.2,0.0)));
 	if(age%20==10)
 		tree.push_front(new tree_c(0,hge->Random_Float(+0.5,+1.2),0.0,15+hge->Random_Float(-0.2,0.2),hge->Random_Float(0.0,+0.2)));
@@ -94,6 +98,15 @@ void road_bg::loop()
 		tree.push_front(new tree_c(hge->Random_Int(1,2),hge->Random_Float(-1.5,-0.9),hge->Random_Float(1.0,2.0),15+hge->Random_Float(-0.2,0.2),hge->Random_Float(-0.3,0.3)));
 	if(age%20==10)
 		tree.push_front(new tree_c(hge->Random_Int(3,4),hge->Random_Float(+0.9,+1.5),hge->Random_Float(1.0,2.0),15+hge->Random_Float(-0.2,0.2),hge->Random_Float(-0.3,0.3)));
+	*/
+
+	if(age%(int(1/speed))==0)
+	{
+		tree.push_front(new tree_c(0,hge->Random_Float(-1.2,-0.5),0.0,15+hge->Random_Float(-0.2,0.2),hge->Random_Float(-0.2,0.0)));
+		tree.push_front(new tree_c(0,hge->Random_Float(+0.5,+1.2),0.0,15+hge->Random_Float(-0.2,0.2),hge->Random_Float(0.0,+0.2)));
+		tree.push_front(new tree_c(hge->Random_Int(1,2),hge->Random_Float(-1.5,-0.9),hge->Random_Float(1.0,2.0),15+hge->Random_Float(-0.2,0.2),hge->Random_Float(-0.3,0.3)));
+		tree.push_front(new tree_c(hge->Random_Int(3,4),hge->Random_Float(+0.9,+1.5),hge->Random_Float(1.0,2.0),15+hge->Random_Float(-0.2,0.2),hge->Random_Float(-0.3,0.3)));
+	}
 	list<tree_c*>::iterator iter;
 	for(iter=tree.begin();iter!=tree.end();)
 	{

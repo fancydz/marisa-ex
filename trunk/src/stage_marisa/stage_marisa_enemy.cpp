@@ -234,7 +234,7 @@ void stage_marisa_wave_5_minion::loop()
 	if(age>60&&age%60==30&&(!dead))
 	{
 		float a=v2a(master->real_x+estg->self->real_x-2*real_x,master->real_y+estg->self->real_y-2*real_y);
-		estg->add(new sector<>(real_x,real_y,a,0.3,res->BARROW[2],false,6,4,0.3,0,0,0,6,0,4));
+		estg->add(new sector<>(real_x,real_y,a,0.3,res->BARROW[12],false,6,4,0.3,0,0,0,6,0,4));
 	}
 }
 
@@ -259,7 +259,7 @@ void stage_marisa_wave_5::loop()
 		if(age%60==30)
 		{
 			estg->play_se("se_tan00",0.15);
-			estg->add(new sector<>(real_x,real_y,0,0.4,res->BALL1[10],false,64,1,0.0625,0,0,0));
+			estg->add(new sector<>(real_x,real_y,0,0.4,res->BALL1[2],false,64,1,0.0625,0,0,0));
 		}
 	}
 	if(age==660) dmg_factor=2.0; 
@@ -303,7 +303,7 @@ void stage_marisa_wave_8::loop()
 	stage_marisa_wave_0::loop();
 	if(age>90&&age<90+_stay&&age%49==0)
 	{
-		estg->add(new sector<>(real_x,real_y,age/600.0,0.3,res->SRICE[4],false,16,3,0.25,0,0,0.05));
+		estg->add(new sector<>(real_x,real_y,age/600.0,0.3,res->SRICE[12],false,16,3,0.25,0,0,0.05));
 		estg->play_se("se_tan00",0.15);
 	}
 }
@@ -436,7 +436,7 @@ void stage_marisa_wave_15_minion::loop()
 	if(age>90&&age<1200)
 	{
 		if(x<0.2&&age%8==1)
-			estg->add(new sector<>(real_x,real_y,crot,0.4,res->SRICE[10],false,3,1,0.45,0,0,0));
+			estg->add(new sector<>(real_x,real_y,crot,0.4,res->SRICE[0],false,3,1,0.45,0,0,0));
 		if(x>0.2&&age%30==1)
 			estg->add(new sector<>(real_x,real_y,crot,0.2,res->SRICE[2],false,3,1,0.3,0,0,0));
 	}

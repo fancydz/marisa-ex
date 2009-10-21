@@ -16,8 +16,7 @@ using namespace std;
 class ESTG
 {
 public:
-	ESTG();
-	void reset(int _self);
+	ESTG(char* rep_file=0);
 	list<bullet*> blist[MAX_ATTR][MAX_LAYER];
 	self_char* self;
 	bullet* stage_master;
@@ -31,6 +30,7 @@ public:
 		int object;
 		int object_alive;
 		int point;
+		int p2p[8];
 		int player;
 		int spell;
 		int graze;
@@ -39,7 +39,7 @@ public:
 	} data;
 	int ticker;
 	list<bullet*>::iterator add(bullet* pbullet);
-	inline void add_self(int _self);
+	void add_self(int _self);
 	void loop();
 	void run_scripts();
 	float xorg,yorg,xstr,ystr,xos,yos;
@@ -71,6 +71,19 @@ public:
 	void kill_all_bullet();
 	float hp_bar;
 	float count_down_timer;
+	bool is_replay;
+	bool no_rep;
+	char rep_data[1024*1024];
+	struct rep_info_t
+	{
+		int ran_seed;
+		int lenth;
+		//and other informations
+	} rep_info;
+	void save_rep(char* rep_file_path);
+	void load_rep(char* rep_file_path);
+	bool quit_flag;
+	void quit();
 	~ESTG();
 };
 

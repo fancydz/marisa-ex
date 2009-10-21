@@ -22,17 +22,21 @@ stage_marisa::stage_marisa()
 	estg->sres.img["ground2"]=new pic(estg->sres.TEX["forest"],128,1,127,127);
 	estg->sres.img["ground3"]=new pic(estg->sres.TEX["forest"],128,128,127,127);
 	estg->sres.TEX["marisa_boss"]=hge->Texture_Load("img\\marisa.png");
-	estg->sres.snd["th06_14"]=new estg_se("bgm\\th06_14.mp3");
-	estg->play_bgm(estg->sres.snd["th06_14"]->se,155.0,117.45639455782312925170068027211);
+	//estg->sres.snd["th06_14"]=new estg_se("bgm\\th06_14.mp3");
+	//estg->play_bgm(estg->sres.snd["th06_14"]->se,155.0,117.45639455782312925170068027211);
+
+	estg->sres.snd["0308"]=new estg_se("bgm\\0308.mp3");
+	estg->sres.snd["0310"]=new estg_se("bgm\\0310.mp3");
+	estg->play_bgm(estg->sres.snd["0308"]->se,94.0,87.0124263);
 	
 	//create background
+	estg->sres.val["bg_speed"]=0.05;
 	estg->set_bg(new road_bg());
 	
 	//register itself to stage_master
 	estg->stage_master=this;
 	//
-	//
-	age=10600;
+	//age=11400;
 	//age=5900;
 	//
 }
@@ -95,50 +99,53 @@ void stage_marisa::loop()
 	if(age==5910)
 		estg->add(new marisa_1(-0.54,0.64));
 		
-	if(age>6000&&age<9160&&age%840==150)
+	if(age==6030)
 	{
-		for(i=0;i<8;i++)
-			switch(hge->Random_Int(0,5))
+		for(i=0;i<7;i++)
+			switch((i+age/420)%6)
 			{
 				case 0:
 				{
-					(*estg->add(new stage_marisa_wave_8((i-3.5)*0.12,0.35+(i%2)*0.05)))->age=-i*20;
+					(*estg->add(new stage_marisa_wave_8((i-3)*0.13,0.35+(i%2)*0.05)))->age=-i*20;
 					break;
 				}
 				case 1:
 				{
-					(*estg->add(new stage_marisa_wave_9((i-3.5)*0.12,0.35+(i%2)*0.05)))->age=-i*20;
+					(*estg->add(new stage_marisa_wave_9((i-3)*0.13,0.35+(i%2)*0.05)))->age=-i*20;
 					break;
 				}
 				case 2:
 				{
-					(*estg->add(new stage_marisa_wave_10((i-3.5)*0.12,0.35+(i%2)*0.05)))->age=-i*20;
+					(*estg->add(new stage_marisa_wave_10((i-3)*0.13,0.35+(i%2)*0.05)))->age=-i*20;
 					break;
 				}
 				case 3:
 				{
-					(*estg->add(new stage_marisa_wave_11((i-3.5)*0.12,0.35+(i%2)*0.05)))->age=-i*20;
+					(*estg->add(new stage_marisa_wave_11((i-3)*0.13,0.35+(i%2)*0.05)))->age=-i*20;
 					break;
 				}
 				case 4:
 				{
-					(*estg->add(new stage_marisa_wave_14((i-3.5)*0.12,0.35+(i%2)*0.05)))->age=-i*20;
+					(*estg->add(new stage_marisa_wave_14((i-3)*0.13,0.35+(i%2)*0.05)))->age=-i*20;
 					break;
 				}
 				default:
 				{
-					(*estg->add(new stage_marisa_wave_4((i-3.5)*0.12,0.35+(i%2)*0.05)))->age=-i*20;
+					(*estg->add(new stage_marisa_wave_4((i-3)*0.13,0.35+(i%2)*0.05)))->age=-i*20;
 					break;
 				}
 			}
 	}
-	
-	if(age==9560)
+	if(age==6870)
+		for(i=0;i<8;i++)
+		{
+			estg->add(new stage_marisa_wave_2(i*25,120-i*12,+1));
+			estg->add(new stage_marisa_wave_2(i*25,120-i*12,-1));
+		}
+	if(age==7710)
 		estg->add(new stage_marisa_wave_15(0));
 	
-	if(age==10640)
+	if(age==8790)
 		estg->add(new marisa_2(-0.54,0.64));
-	
-	if(age==10670)
-		age=0;
+
 	}

@@ -139,8 +139,17 @@ green_dam_bomb::green_dam_bomb()
 {
 	estg->play_se("se_gun00",0.5);
 	clear_r=0.1;
-	estg->shake(360);
-	estg->self->inv(360);
+	dying=(estg->self->dying_sts!=0);
+	if(dying)
+	{
+		estg->shake(360);
+		estg->self->inv(390);
+	}
+	else
+	{
+		estg->shake(240);
+		estg->self->inv(270);
+	}
 }
 
 void green_dam_bomb::loop()
@@ -151,24 +160,46 @@ void green_dam_bomb::loop()
 		estg->add(new green_dam_bomb_bullet(0,0,0,0,hge->Random_Float(0,4),hge->Random_Float(0.6,1.6),estg->self->sres.img["bullet_a"]));
 		estg->add(new green_dam_bomb_bullet(3,0,0,0,hge->Random_Float(0,4),hge->Random_Float(0.6,1.6),estg->self->sres.img["bullet_b"]));
 	}
-	if(age<240)
+	if(dying)
 	{
-		clear_r+=0.012;
-		list<bullet*>::iterator iter;
-		for(i=0;i<MAX_LAYER;i++)
-			for(iter=estg->blist[ENEMY_BULLET][i].begin();iter!=estg->blist[ENEMY_BULLET][i].end();iter++)
-				if((*iter)->age>0&&(*iter)->suffer&&is_collide(*iter,estg->self,clear_r))
-					(*iter)->kill();
+		if(age<240)
+		{
+			clear_r+=0.012;
+			list<bullet*>::iterator iter;
+			for(i=0;i<MAX_LAYER;i++)
+				for(iter=estg->blist[ENEMY_BULLET][i].begin();iter!=estg->blist[ENEMY_BULLET][i].end();iter++)
+					if((*iter)->age>0&&(*iter)->suffer&&is_collide(*iter,estg->self,clear_r))
+						(*iter)->kill();
+		}
+		if(age==120)
+			clear_r=0.1;
+		if(age==360)
+		{
+			estg->play_se("se_tan01",0.7);
+			estg->kill_all_bullet();
+			destroy();
+		}
 	}
-	if(age==120)
-		clear_r=0.1;
-	if(age==345)
+	else
 	{
-		estg->play_se("se_tan01",0.7);
-		estg->kill_all_bullet();
+		if(age<180)
+		{
+			clear_r+=0.016;
+			list<bullet*>::iterator iter;
+			for(i=0;i<MAX_LAYER;i++)
+				for(iter=estg->blist[ENEMY_BULLET][i].begin();iter!=estg->blist[ENEMY_BULLET][i].end();iter++)
+					if((*iter)->age>0&&(*iter)->suffer&&is_collide(*iter,estg->self,clear_r))
+						(*iter)->kill();
+		}
+		if(age==90)
+			clear_r=0.1;
+		if(age==240)
+		{
+			estg->play_se("se_tan01",0.7);
+			estg->kill_all_bullet();
+			destroy();
+		}
 	}
-	if(age==360)
-		destroy();
 }
 
 green_dam_bomb_bullet::green_dam_bomb_bullet(int type,float dmg,float x0,float y0,float angle,float speed,pic *image,float delay)

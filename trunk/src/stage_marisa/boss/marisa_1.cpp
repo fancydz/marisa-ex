@@ -36,6 +36,7 @@ void marisa_1::sc_1(int t)
 		sc_info.time_1=0;
 		sc_info.time_2=15;
 		sc_info.time_3=45;
+		estg->play_bgm(estg->sres.snd["0310"]->se,126.0,116.453878);
 	}
 	if(t==60) estg->set_bg(new marisa_bg());
 	
@@ -121,6 +122,7 @@ void marisa_1::escape(int t)
 	if(t==60)
 	{
 		estg->set_bg(new road_bg());
+		estg->sres.val["bg_speed"]=0.125;
 		move_to(0.54,0.64,120);
 	}
 	if(t==180) destroy();
@@ -211,10 +213,10 @@ void marisa_1_3_minion::loop()
 	f=f*(f+0.25)*0.8;
 	x=x0*(1-f)+x1*f;
 	y=0.64-1.28*f;
-	if(age%3==2)
+	if(age%4==2)
 	{
 		f=hge->Random_Float(0,1);
-		estg->add(new marisa_1_2_bullet(real_x,real_y,hge->Random_Float(-1.5,1.5)*(real_y+1)+v2a(x1-x0,-1.28),0.3,0,2,res->SSTAR[img_index],(age%6-3)*0.03));
+		estg->add(new marisa_1_2_bullet(real_x,real_y,hge->Random_Float(-1.0,1.0)*(real_y+1)+v2a(x1-x0,-1.28),0.3,0,2,res->SSTAR[img_index],(age%8-4)*0.03));
 		(*(estg->add(new bubble(real_x,real_y,img,20,1,0.5,0xFFFFFFFF,0x00FFFFFF,layer=ENEMY_BULLET_LAYER))))->rot=rot;
 	}
 }

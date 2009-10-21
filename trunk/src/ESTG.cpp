@@ -2,6 +2,7 @@
 
 #include <estg_math.h>
 #include <iostream>
+#include <fstream>
 #include <common/common_res.h>
 #include <common/item/item.h>
 
@@ -11,8 +12,9 @@ ESTG* estg=0;
 HGE* hge=0;
 cres* res=0;
 
-ESTG::ESTG()
+ESTG::ESTG(char* rep_file)
 {
+	ticker=0;
 	self=0;
 	stage_master=0;
 	res=new cres();
@@ -27,18 +29,64 @@ ESTG::ESTG()
 	bg_trans_time=60;
 	bg_trans_status=0;
 	se_volume=1.0;
-	bgm_volume=0.0;
+	bgm_volume=1.0;
 	bgm.next_bgm=0;
 	bgm.bgm_chn=0;
 	bgm.fade_status=0;
 	data.graze=data.object=data.object_alive=data.point=data.score=data.score_show=0;
 	data.spell=3;
-	data.player=100;
+	data.player=4;
 	hp_bar=-1.0;
 	count_down_timer=-1.0;
+	data.p2p[0]=100;
+	data.p2p[1]=200;
+	data.p2p[2]=300;
+	data.p2p[3]=400;
+	data.p2p[4]=500;
+	data.p2p[5]=9999;
+	data.p2p[6]=9999;
+	data.p2p[7]=9999;
+	if(rep_file==0)
+	{
+		rep_info.ran_seed=hge->Random_Int(1,65536);
+		hge->Random_Seed(rep_info.ran_seed);
+		is_replay=false;
+		rep_info.lenth=0;
+	}
+	else
+	{
+		//load rep
+		is_replay=true;
+		load_rep(rep_file);
+		hge->Random_Seed(rep_info.ran_seed);
+	}
+	no_rep=false;
+	quit_flag=false;
 }
 
-inline void ESTG::add_self(int _self)
+void ESTG::save_rep(char* rep_file_path)
+{
+	ofstream replay_file(rep_file_path,ofstream::binary);
+	replay_file.write((char*)&rep_info,sizeof(rep_info));
+	replay_file.write(rep_data,rep_info.lenth);
+	replay_file.close();
+}
+
+void ESTG::load_rep(char* rep_file_path)
+{
+	ifstream replay_file(rep_file_path,ifstream::binary);
+	replay_file.read((char*)&rep_info,sizeof(rep_info));
+	replay_file.read(rep_data,rep_info.lenth);
+	replay_file.close();
+}
+
+void ESTG::quit()
+{
+	if((!is_replay)&&(!no_rep))
+		estg->save_rep("rep\\replay~");
+}
+
+void ESTG::add_self(int _self)
 {
 	pause=false;
 	switch(_self)
@@ -51,12 +99,6 @@ inline void ESTG::add_self(int _self)
 		default:
 			exit(0);
 	}
-}
-
-void ESTG::reset(int _self)
-{
-	ticker=0;
-	add_self(_self);
 }
 
 void ESTG::set_bg(back_ground* pbg,int trans_time)

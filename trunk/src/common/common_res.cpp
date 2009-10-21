@@ -174,6 +174,7 @@ cres::cres()
 	snd["se_gun00"]=new estg_se("snd\\se_gun00.wav");
 	snd["se_timeout"]=new estg_se("snd\\se_timeout.wav");
 	snd["se_nep00"]=new estg_se("snd\\se_nep00.wav");
+	snd["se_extend"]=new estg_se("snd\\se_extend.wav");
 	//
 	fnt=new hgeFont("img\\font1.fnt");
 	//fnt->SetScale(2.0);
