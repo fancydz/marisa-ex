@@ -2,13 +2,35 @@
 
 inline void get_control_keys()
 {
-	estg->control.up=hge->Input_GetKeyState(HGEK_UP)||hge->Input_GetKeyState(HGEK_W);
-	estg->control.down=hge->Input_GetKeyState(HGEK_DOWN)||hge->Input_GetKeyState(HGEK_S);
-	estg->control.left=hge->Input_GetKeyState(HGEK_LEFT)||hge->Input_GetKeyState(HGEK_A);
-	estg->control.right=hge->Input_GetKeyState(HGEK_RIGHT)||hge->Input_GetKeyState(HGEK_D);
-	estg->control.slow=hge->Input_GetKeyState(HGEK_SHIFT)||hge->Input_GetKeyState(HGEK_NUMPAD4);
-	estg->control.fire=hge->Input_GetKeyState(HGEK_Z)||hge->Input_GetKeyState(HGEK_NUMPAD5);
-	estg->control.bomb=hge->Input_GetKeyState(HGEK_X)||hge->Input_GetKeyState(HGEK_NUMPAD6);
+	if(estg->is_replay)
+	{
+		estg->control.up=((estg->rep_data[estg->ticker]&1)!=0);
+		estg->control.down=((estg->rep_data[estg->ticker]&2)!=0);
+		estg->control.left=((estg->rep_data[estg->ticker]&4)!=0);
+		estg->control.right=((estg->rep_data[estg->ticker]&8)!=0);
+		estg->control.slow=((estg->rep_data[estg->ticker]&16)!=0);
+		estg->control.fire=((estg->rep_data[estg->ticker]&32)!=0);
+		estg->control.bomb=((estg->rep_data[estg->ticker]&64)!=0);
+	}
+	else
+	{
+		estg->control.up=hge->Input_GetKeyState(HGEK_UP)||hge->Input_GetKeyState(HGEK_W);
+		estg->control.down=hge->Input_GetKeyState(HGEK_DOWN)||hge->Input_GetKeyState(HGEK_S);
+		estg->control.left=hge->Input_GetKeyState(HGEK_LEFT)||hge->Input_GetKeyState(HGEK_A);
+		estg->control.right=hge->Input_GetKeyState(HGEK_RIGHT)||hge->Input_GetKeyState(HGEK_D);
+		estg->control.slow=hge->Input_GetKeyState(HGEK_SHIFT)||hge->Input_GetKeyState(HGEK_NUMPAD4);
+		estg->control.fire=hge->Input_GetKeyState(HGEK_Z)||hge->Input_GetKeyState(HGEK_NUMPAD5);
+		estg->control.bomb=hge->Input_GetKeyState(HGEK_X)||hge->Input_GetKeyState(HGEK_NUMPAD6);
+		estg->rep_data[estg->rep_info.lenth]= (estg->control.up==true)
+		                                     |((estg->control.down==true)<<1)
+											 |((estg->control.left==true)<<2)
+											 |((estg->control.right==true)<<3)
+											 |((estg->control.slow==true)<<4)
+											 |((estg->control.fire==true)<<5)
+											 |((estg->control.bomb==true)<<6)
+											 |(128);
+		estg->rep_info.lenth++;
+	}
 }
 
 void hge_init(void)
@@ -33,13 +55,17 @@ void hge_init(void)
 
 bool FrameFunc()
 {
-	get_control_keys();
+	if(estg->ticker==estg->rep_info.lenth-1)
+		return true;
+	if(!estg->pause)
+		get_control_keys();
 	estg->loop();
 	switch(hge->Input_GetKey())
 	{
 		case HGEK_ESCAPE: return true;
 		case HGEK_SPACE: estg->pause=!(estg->pause);
 	}
+	if(estg->quit_flag) return true;
 	return false;
 }
 
@@ -79,12 +105,19 @@ bool RenderFunc()
 	hge->Gfx_SetClipping();
 	//
 	//UI
+	//
+	int point_temp;
+	for(i=7;i>=0;i--)
+	{
+		if(estg->data.p2p[i]>estg->data.point)
+			point_temp=estg->data.p2p[i];
+	}
 	res->fnt->SetColor(0xFF000000);
-	res->fnt->printf(432,37,HGETEXT_LEFT,"Score: %d\n\nPlayer: %d\nSpell: %d\n\nPoint: %d\nGraze: %d\n\nObjs: %d/%d\nFPS: %d",
-		estg->data.score_show,estg->data.player,estg->data.spell,estg->data.point,estg->data.graze,estg->data.object_alive,estg->data.object,hge->Timer_GetFPS());
+	res->fnt->printf(432,37,HGETEXT_LEFT,"Score: %d\n\nPlayer: %d\nSpell: %d\n\nPoint: %d/%d\nGraze: %d\n\nObjs: %d/%d\nFPS: %d",
+		estg->data.score_show,estg->data.player,estg->data.spell,estg->data.point,point_temp,estg->data.graze,estg->data.object_alive,estg->data.object,hge->Timer_GetFPS());
 	res->fnt->SetColor(0xFFFFFFFF);
-	res->fnt->printf(430,35,HGETEXT_LEFT,"Score: %d\n\nPlayer: %d\nSpell: %d\n\nPoint: %d\nGraze: %d\n\nObjs: %d/%d\nFPS: %d",
-		estg->data.score_show,estg->data.player,estg->data.spell,estg->data.point,estg->data.graze,estg->data.object_alive,estg->data.object,hge->Timer_GetFPS());
+	res->fnt->printf(430,35,HGETEXT_LEFT,"Score: %d\n\nPlayer: %d\nSpell: %d\n\nPoint: %d/%d\nGraze: %d\n\nObjs: %d/%d\nFPS: %d",
+		estg->data.score_show,estg->data.player,estg->data.spell,estg->data.point,point_temp,estg->data.graze,estg->data.object_alive,estg->data.object,hge->Timer_GetFPS());
 	//
 	if(estg->count_down_timer>0)
 	{

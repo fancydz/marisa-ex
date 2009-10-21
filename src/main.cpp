@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
 #include "game.h"
 #include <stage_marisa\stage_marisa.h>
 
@@ -16,10 +17,20 @@ int WINAPI WinMain(HINSTANCE hInstance,
     int nCmdShow)
 {
 	hge_init();
-	estg=new ESTG();
-	estg->reset(GREEN_DAM);
+	ifstream test_rep("rep\\replay",ifstream::binary);
+	if(test_rep)
+	{
+		test_rep.close();
+		estg=new ESTG("rep\\replay");
+	}
+	else
+	{
+		estg=new ESTG();
+	}
+	estg->add_self(GREEN_DAM);
 	estg->add(new stage_marisa());
 	hge->System_Start();
+	estg->quit();
 	hge->System_Shutdown();
 	hge->Release();
     return 0;

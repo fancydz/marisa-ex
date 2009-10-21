@@ -82,6 +82,13 @@ void point::collide(bullet *sufferer)
 {
 	dead=true;
 	estg->data.point++;
+	int i;
+	for(i=0;i<8;i++)
+		if(estg->data.point==estg->data.p2p[i])
+		{
+			estg->play_se("se_extend",0.7);
+			estg->data.player++;
+		}
 	estg->data.score+=int(POINT_BONUS*(1+estg->data.graze/GRAZE_FACTOR));
 	estg->play_se("se_item00",0.2);
 }

@@ -130,9 +130,19 @@ void self_char::act()
 	if(dying_sts>0) dying_sts--;
 	if(dying_sts==1)
 	{
+		dying_sts--;
 		estg->data.player--;
 		estg->data.spell=3;
 		estg->add(new miss_protector());
+		if(estg->data.player==-1)
+			estg->quit_flag=true;
+		/*
+		if((estg->data.player==-1)&&(!estg->is_replay)&&(!estg->no_rep))
+		{
+			estg->save_rep("rep\\replay~");
+			estg->no_rep=true;
+		}
+		*/
 	}
 	//
 	//graze graphic
@@ -272,18 +282,18 @@ void self_char::inv(int t)
 
 miss_protector::miss_protector()
 {
-	clear_r=0;
-	estg->self->inv(120);
+	clear_r=0.1;
+	estg->self->inv(180);
 }
 
 void miss_protector::loop()
 {
 	int i;
 	list<bullet*>::iterator iter;
-	clear_r+=0.009;
+	clear_r+=0.016;
 	for(i=0;i<MAX_LAYER;i++)
 		for(iter=estg->blist[ENEMY_BULLET][i].begin();iter!=estg->blist[ENEMY_BULLET][i].end();iter++)
 			if((*iter)->age>0&&(*iter)->suffer&&is_collide(*iter,estg->self,clear_r))
 				(*iter)->kill();
-	if(age==180) destroy();
+	if(age==90) destroy();
 }

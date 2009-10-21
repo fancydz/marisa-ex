@@ -30,6 +30,7 @@ class green_dam_bomb : public ether
 public:
 	green_dam_bomb();
 	float clear_r;
+	bool dying;
 	void loop();
 };
 
